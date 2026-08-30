@@ -8,6 +8,7 @@ import {
   Check,
   ChevronRight,
   Copy,
+  Cpu,
   Database,
   Download,
   Github,
@@ -118,6 +119,55 @@ const SKILLS = [
 ];
 
 /* ─────────────────────────────────────────────────
+   ANIMATED COUNT UP COMPONENT
+───────────────────────────────────────────────── */
+function CountUp({ target, suffix = "", prefix = "" }: { target: number; suffix?: string; prefix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isStarted = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !isStarted.current) {
+          isStarted.current = true;
+          const start = performance.now();
+          const duration = 1400;
+
+          const animate = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+            setCount(Math.floor(easeOutQuad * target));
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              setCount(target);
+            }
+          };
+
+          requestAnimationFrame(animate);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target]);
+
+  return (
+    <span ref={ref}>
+      {prefix}{count.toLocaleString()}{suffix}
+    </span>
+  );
+}
+
+/* ─────────────────────────────────────────────────
    ANIMATED PARTICLES CANVAS HOOK
 ───────────────────────────────────────────────── */
 function useParticleCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>, theme: string) {
@@ -138,11 +188,11 @@ function useParticleCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>,
     resize();
     window.addEventListener("resize", resize);
 
-    particles = Array.from({ length: 45 }, () => ({
+    particles = Array.from({ length: 48 }, () => ({
       x: Math.random() * (canvas?.width || 800),
       y: Math.random() * (canvas?.height || 600),
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
       size: Math.random() * 1.5 + 0.8,
     }));
 
@@ -150,8 +200,8 @@ function useParticleCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>,
       if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const particleColor = theme === "dark" ? "rgba(184, 243, 151, 0.55)" : "rgba(77, 124, 15, 0.4)";
-      const lineColorBase = theme === "dark" ? "184, 243, 151" : "77, 124, 15";
+      const particleColor = theme === "dark" ? "rgba(184, 243, 151, 0.6)" : "rgba(0, 214, 104, 0.45)";
+      const lineColorBase = theme === "dark" ? "184, 243, 151" : "0, 214, 104";
 
       for (const p of particles) {
         p.x += p.vx;
@@ -170,11 +220,11 @@ function useParticleCanvas(canvasRef: React.RefObject<HTMLCanvasElement | null>,
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 110) {
+          if (dist < 115) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            const alpha = (1 - dist / 110) * 0.12;
+            const alpha = (1 - dist / 115) * 0.16;
             ctx.strokeStyle = `rgba(${lineColorBase}, ${alpha})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
@@ -239,6 +289,7 @@ function useTypewriter(phrases: string[], speed = 60, pause = 2200) {
 ───────────────────────────────────────────────── */
 export default function AadisheshuPortfolio() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [terminalTab, setTerminalTab] = useState<"docker" | "arch" | "specs">("docker");
   const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -253,6 +304,25 @@ export default function AadisheshuPortfolio() {
     setTheme(next);
     localStorage.setItem("ak_theme", next);
   };
+
+  // Scroll reveal animation observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    const elements = document.querySelectorAll(".ak-reveal");
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
 
   useParticleCanvas(canvasRef, theme);
 
@@ -334,7 +404,7 @@ export default function AadisheshuPortfolio() {
         <div className="ak-container">
           <div className="ak-hero-grid">
             {/* Left Hero Content */}
-            <div>
+            <div className="ak-reveal is-visible">
               <div className="ak-hero-badge">
                 <span className="ak-badge-dot" />
                 <span>Founding Engineer · Systems Architect</span>
@@ -366,63 +436,126 @@ export default function AadisheshuPortfolio() {
               </div>
             </div>
 
-            {/* Right Live Production Terminal */}
-            <div className="ak-terminal-card" aria-label="Production Telemetry Console">
+            {/* Right Live Production Terminal with Interactive Tabs */}
+            <div className="ak-terminal-card ak-reveal is-visible" aria-label="Production Telemetry Console">
               <div className="ak-term-header">
                 <div className="ak-term-dots">
                   <span className="ak-term-dot ak-dot-red" />
                   <span className="ak-term-dot ak-dot-yellow" />
                   <span className="ak-term-dot ak-dot-green" />
                 </div>
-                <span className="ak-term-title">root@proserver: ~ (docker telemetry)</span>
+
+                {/* Interactive Terminal Tabs */}
+                <div className="ak-term-tabs">
+                  <button
+                    onClick={() => setTerminalTab("docker")}
+                    className={`ak-term-tab ${terminalTab === "docker" ? "active" : ""}`}
+                  >
+                    docker ps
+                  </button>
+                  <button
+                    onClick={() => setTerminalTab("arch")}
+                    className={`ak-term-tab ${terminalTab === "arch" ? "active" : ""}`}
+                  >
+                    arch.json
+                  </button>
+                  <button
+                    onClick={() => setTerminalTab("specs")}
+                    className={`ak-term-tab ${terminalTab === "specs" ? "active" : ""}`}
+                  >
+                    specs.log
+                  </button>
+                </div>
+
                 <div className="ak-term-status">
                   <span className="ak-badge-dot" /> LIVE
                 </div>
               </div>
 
+              {/* Terminal Body Content Based on Selected Tab */}
               <div className="ak-term-body">
-                <div className="term-row">
-                  <span className="term-prompt">$</span>
-                  <span className="term-cmd">docker ps --format &quot;table &#123;&#123;.Names&#125;&#125; \t &#123;&#123;.Status&#125;&#125;&quot;</span>
-                </div>
-                <div style={{ height: 8 }} />
-                <div className="term-container-row">
-                  <span className="tc-name tc-green">nova_backend_http</span>
-                  <span className="tc-uptime">Up 4 days (healthy)</span>
-                </div>
-                <div className="term-container-row">
-                  <span className="tc-name tc-green">nova_frontend</span>
-                  <span className="tc-uptime">Up 4 days (healthy)</span>
-                </div>
-                <div className="term-container-row">
-                  <span className="tc-name tc-violet">rubix_llama (Gemma 4B)</span>
-                  <span className="tc-uptime">Up 4 days (healthy)</span>
-                </div>
-                <div className="term-container-row">
-                  <span className="tc-name tc-violet">nova_kokoro (TTS engine)</span>
-                  <span className="tc-uptime">Up 4 days (healthy)</span>
-                </div>
-                <div className="term-container-row">
-                  <span className="tc-name tc-amber">nidhi-live-data-plane</span>
-                  <span className="tc-uptime">Up 4 days (healthy)</span>
-                </div>
-                <div className="term-container-row">
-                  <span className="tc-name tc-amber">nidhi-production-minio</span>
-                  <span className="tc-uptime">Up 17 hours</span>
-                </div>
-                <div className="term-container-row">
-                  <span className="tc-name tc-blue">vitharn-platform-disha</span>
-                  <span className="tc-uptime">Up 28 hours</span>
-                </div>
-                <div className="term-container-row">
-                  <span className="tc-name tc-blue">rubix_web</span>
-                  <span className="tc-uptime">Up 4 days</span>
-                </div>
-                <div style={{ height: 8 }} />
-                <div className="term-row">
-                  <span className="term-prompt">$</span>
-                  <span style={{ color: "#10b981" }}>✓ All 15+ microservices nominal</span>
-                </div>
+                {terminalTab === "docker" && (
+                  <>
+                    <div className="term-row">
+                      <span className="term-prompt">$</span>
+                      <span className="term-cmd">docker ps --format &quot;table &#123;&#123;.Names&#125;&#125; \t &#123;&#123;.Status&#125;&#125;&quot;</span>
+                    </div>
+                    <div style={{ height: 8 }} />
+                    <div className="term-container-row">
+                      <span className="tc-name tc-green">nova_backend_http</span>
+                      <span className="tc-uptime">Up 4 days (healthy)</span>
+                    </div>
+                    <div className="term-container-row">
+                      <span className="tc-name tc-green">nova_frontend</span>
+                      <span className="tc-uptime">Up 4 days (healthy)</span>
+                    </div>
+                    <div className="term-container-row">
+                      <span className="tc-name tc-violet">rubix_llama (Gemma 4B)</span>
+                      <span className="tc-uptime">Up 4 days (healthy)</span>
+                    </div>
+                    <div className="term-container-row">
+                      <span className="tc-name tc-violet">nova_kokoro (TTS engine)</span>
+                      <span className="tc-uptime">Up 4 days (healthy)</span>
+                    </div>
+                    <div className="term-container-row">
+                      <span className="tc-name tc-amber">nidhi-live-data-plane</span>
+                      <span className="tc-uptime">Up 4 days (healthy)</span>
+                    </div>
+                    <div className="term-container-row">
+                      <span className="tc-name tc-amber">nidhi-production-minio</span>
+                      <span className="tc-uptime">Up 17 hours</span>
+                    </div>
+                    <div className="term-container-row">
+                      <span className="tc-name tc-blue">vitharn-platform-disha</span>
+                      <span className="tc-uptime">Up 28 hours</span>
+                    </div>
+                    <div className="term-container-row">
+                      <span className="tc-name tc-blue">rubix_web</span>
+                      <span className="tc-uptime">Up 4 days</span>
+                    </div>
+                    <div style={{ height: 8 }} />
+                    <div className="term-row">
+                      <span className="term-prompt">$</span>
+                      <span style={{ color: "var(--accent)" }}>✓ All 15+ microservices nominal</span>
+                    </div>
+                  </>
+                )}
+
+                {terminalTab === "arch" && (
+                  <>
+                    <div className="term-row">
+                      <span className="term-prompt">$</span>
+                      <span className="term-cmd">cat /etc/rubix/topology.json</span>
+                    </div>
+                    <div style={{ height: 8 }} />
+                    <div style={{ color: "#a78bfa", fontSize: 11 }}>
+                      &#123;<br />
+                      &nbsp;&nbsp;&quot;cluster&quot;: &quot;proserver.vitharn.internal&quot;,<br />
+                      &nbsp;&nbsp;&quot;llm_inference&quot;: &quot;llama.cpp (Gemma-4B-Instruct-Q4)&quot;,<br />
+                      &nbsp;&nbsp;&quot;tts_engine&quot;: &quot;Kokoro-82M ONNX&quot;,<br />
+                      &nbsp;&nbsp;&quot;storage&quot;: &quot;MinIO S3 + Postgres (Streaming Standby)&quot;,<br />
+                      &nbsp;&nbsp;&quot;ci_cd&quot;: &quot;GHCR + Watchtower (~30s auto-deploy)&quot;<br />
+                      &#125;
+                    </div>
+                  </>
+                )}
+
+                {terminalTab === "specs" && (
+                  <>
+                    <div className="term-row">
+                      <span className="term-prompt">$</span>
+                      <span className="term-cmd">neofetch --stdout</span>
+                    </div>
+                    <div style={{ height: 8 }} />
+                    <div style={{ color: "#94a3b8", fontSize: 11, lineHeight: 1.7 }}>
+                      <span style={{ color: "var(--accent)" }}>OS:</span> Ubuntu 22.04 LTS x86_64<br />
+                      <span style={{ color: "var(--accent)" }}>Uptime:</span> 4 days, 18 hours, 32 mins<br />
+                      <span style={{ color: "var(--accent)" }}>Containers:</span> 15 (all running, 0 paused)<br />
+                      <span style={{ color: "var(--accent)" }}>Reverse Proxy:</span> Nginx 1.24 SSL / HTTP/2<br />
+                      <span style={{ color: "var(--accent)" }}>Memory Load:</span> 64% allocated / healthy
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="ak-term-footer">
@@ -444,24 +577,32 @@ export default function AadisheshuPortfolio() {
         </div>
       </section>
 
-      {/* ── METRICS STRIP ── */}
-      <section className="ak-stats-bar" aria-label="Core Metrics">
+      {/* ── METRICS STRIP WITH COUNT-UP ANIMATION ── */}
+      <section className="ak-stats-bar ak-reveal" aria-label="Core Metrics">
         <div className="ak-container">
           <div className="ak-stats-grid">
             <div className="ak-stat-item">
-              <div className="ak-stat-num">15+</div>
+              <div className="ak-stat-num">
+                <CountUp target={15} suffix="+" />
+              </div>
               <div className="ak-stat-label">Live Production Containers</div>
             </div>
             <div className="ak-stat-item">
-              <div className="ak-stat-num">70+</div>
+              <div className="ak-stat-num">
+                <CountUp target={70} suffix="+" />
+              </div>
               <div className="ak-stat-label">Production REST APIs Shipped</div>
             </div>
             <div className="ak-stat-item">
-              <div className="ak-stat-num">1,700+</div>
+              <div className="ak-stat-num">
+                <CountUp target={1700} suffix="+" />
+              </div>
               <div className="ak-stat-label">Active Users on Acharya ERP</div>
             </div>
             <div className="ak-stat-item">
-              <div className="ak-stat-num">&lt; 60s</div>
+              <div className="ak-stat-num">
+                <CountUp target={60} prefix="< " suffix="s" />
+              </div>
               <div className="ak-stat-label">DBaaS Microservice Provisioning</div>
             </div>
           </div>
@@ -471,7 +612,7 @@ export default function AadisheshuPortfolio() {
       {/* ── SELECTED WORK / PROJECTS ── */}
       <section className="ak-section" id="work">
         <div className="ak-container">
-          <div className="ak-section-header">
+          <div className="ak-section-header ak-reveal">
             <div className="ak-section-tag">
               <Layers size={13} /> Selected Architecture
             </div>
@@ -488,7 +629,7 @@ export default function AadisheshuPortfolio() {
                 href={proj.href}
                 target={proj.href.startsWith("http") ? "_blank" : undefined}
                 rel={proj.href.startsWith("http") ? "noreferrer" : undefined}
-                className="ak-project-card"
+                className="ak-project-card ak-reveal"
                 aria-label={`View project: ${proj.title}`}
               >
                 <div className="ak-proj-num">{proj.num}</div>
@@ -523,7 +664,7 @@ export default function AadisheshuPortfolio() {
       <section className="ak-section" id="experience" style={{ background: "var(--bg-subtle)" }}>
         <div className="ak-container">
           <div className="ak-exp-grid">
-            <div className="ak-exp-sticky">
+            <div className="ak-exp-sticky ak-reveal">
               <div className="ak-section-tag">
                 <Activity size={13} /> Trajectory
               </div>
@@ -537,7 +678,7 @@ export default function AadisheshuPortfolio() {
 
             <div className="ak-exp-list">
               {EXPERIENCES.map((exp, idx) => (
-                <div key={idx} className="ak-exp-item">
+                <div key={idx} className="ak-exp-item ak-reveal">
                   <div className="ak-exp-node" />
                   <div className="ak-exp-date">{exp.date}</div>
                   <h3 className="ak-exp-role">{exp.role}</h3>
@@ -558,7 +699,7 @@ export default function AadisheshuPortfolio() {
       {/* ── SYSTEMS PHILOSOPHY & TOOLKIT ── */}
       <section className="ak-section" id="systems">
         <div className="ak-container">
-          <div className="ak-systems-card">
+          <div className="ak-systems-card ak-reveal">
             <div className="ak-systems-grid">
               <div>
                 <div className="ak-section-tag">
@@ -622,7 +763,7 @@ export default function AadisheshuPortfolio() {
       {/* ── CONTACT ── */}
       <section className="ak-section" id="contact">
         <div className="ak-container">
-          <div className="ak-contact-card">
+          <div className="ak-contact-card ak-reveal">
             <div>
               <div className="ak-section-tag">
                 <Zap size={13} /> Connect
