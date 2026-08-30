@@ -6,14 +6,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* ── DARK THEME (Default) ────────────────────────── */
+/* ── DARK THEME (Vitharn Signature) ─────────────── */
 :root, .ak-root[data-theme="dark"] {
-  --bg:            #08090d;
-  --bg-subtle:     #0d0f15;
-  --surface:       #12151e;
-  --surface-hover: #181d29;
-  --surface-glass: rgba(18, 21, 30, 0.8);
-  --raised:        #1d2332;
+  --bg:            #07090e;
+  --bg-gradient:   radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99, 102, 241, 0.14), transparent 70%),
+                   radial-gradient(circle at 85% 30%, rgba(184, 243, 151, 0.06), transparent 50%),
+                   #07090e;
+  --bg-subtle:     #0c0f17;
+  --surface:       #101420;
+  --surface-hover: #151a2b;
+  --surface-glass: rgba(16, 20, 32, 0.75);
+  --raised:        #192033;
 
   --accent:        #b8f397;
   --accent-glow:   #c8ff9e;
@@ -21,6 +24,8 @@
   --accent-dim:    rgba(184, 243, 151, 0.14);
   --accent-trace:  rgba(184, 243, 151, 0.06);
 
+  --vitharn-indigo: #6366f1;
+  --vitharn-purple: #8b5cf6;
   --violet:        #a78bfa;
   --violet-dim:    rgba(167, 139, 250, 0.12);
   --amber:         #fbbf24;
@@ -35,9 +40,9 @@
   --border-strong: rgba(255, 255, 255, 0.14);
   --border-glow:   rgba(184, 243, 151, 0.35);
 
-  --nav-bg:        rgba(8, 9, 13, 0.85);
-  --term-bg:       #0a0c12;
-  --card-shadow:   0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  --nav-bg:        rgba(7, 9, 14, 0.85);
+  --term-bg:       #090b10;
+  --card-shadow:   0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 /* ── LIGHT THEME ─────────────────────────────────── */
@@ -332,14 +337,18 @@ html {
   opacity: 0.6;
 }
 
+.ak-root[data-theme="dark"] {
+  background: var(--bg-gradient);
+}
+
 .ak-hero-grid-bg {
   position: absolute;
   inset: 0;
   background-image: 
     linear-gradient(var(--border) 1px, transparent 1px),
     linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 80%);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 35%, black 20%, transparent 80%);
   pointer-events: none;
 }
 
@@ -365,7 +374,8 @@ html {
   gap: 8px;
   padding: 6px 14px;
   border-radius: 9999px;
-  background: var(--surface);
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--border-strong);
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
@@ -392,7 +402,7 @@ html {
 }
 
 .ak-gradient-text {
-  background: linear-gradient(135deg, var(--ink) 30%, var(--accent-glow) 100%);
+  background: linear-gradient(135deg, #ffffff 20%, #b8f397 60%, #818cf8 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -683,17 +693,20 @@ html {
 }
 
 .ak-project-card {
-  background: var(--surface);
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 36px 40px;
   display: grid;
   grid-template-columns: 80px 1fr auto;
   gap: 32px;
   align-items: center;
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--card-shadow);
 }
 
 .ak-project-card::before {
@@ -710,8 +723,9 @@ html {
 
 .ak-project-card:hover {
   border-color: var(--border-glow);
+  background: var(--surface-hover);
   transform: translateY(-3px);
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 25px rgba(184, 243, 151, 0.08);
 }
 
 .ak-project-card:hover::before {
