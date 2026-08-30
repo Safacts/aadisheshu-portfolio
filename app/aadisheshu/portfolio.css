@@ -297,20 +297,22 @@ html {
   gap: 8px;
   padding: 9px 20px;
   border-radius: 8px;
-  background: var(--accent);
+  background: #b8f397;
   color: #08090d !important;
   font-size: 13px;
   font-weight: 700;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.35);
+  box-shadow: 0 4px 16px rgba(184, 243, 151, 0.35);
+  border: 1px solid rgba(184, 243, 151, 0.4);
   position: relative;
   overflow: hidden;
 }
 
 .ak-root[data-theme="light"] .ak-cta-btn {
-  background: #00d668;
+  background: #b8f397;
   color: #08090d !important;
-  box-shadow: 0 4px 16px rgba(0, 214, 104, 0.35);
+  box-shadow: 0 4px 16px rgba(132, 204, 22, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .ak-cta-btn::after {
@@ -323,7 +325,7 @@ html {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.45),
     transparent
   );
   transform: rotate(25deg);
@@ -332,11 +334,11 @@ html {
 
 .ak-cta-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 8px 24px rgba(184, 243, 151, 0.55);
 }
 
 .ak-root[data-theme="light"] .ak-cta-btn:hover {
-  box-shadow: 0 8px 24px rgba(0, 214, 104, 0.5);
+  box-shadow: 0 8px 24px rgba(132, 204, 22, 0.5);
 }
 
 /* ── HERO SECTION ────────────────────────────────── */
@@ -467,20 +469,22 @@ html {
   gap: 10px;
   padding: 13px 26px;
   border-radius: 8px;
-  background: var(--accent);
+  background: #b8f397;
   color: #08090d !important;
   font-weight: 700;
   font-size: 14px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 18px rgba(var(--accent-rgb), 0.35);
+  box-shadow: 0 4px 18px rgba(184, 243, 151, 0.35);
+  border: 1px solid rgba(184, 243, 151, 0.4);
   position: relative;
   overflow: hidden;
 }
 
 .ak-root[data-theme="light"] .btn-primary {
-  background: #00d668;
+  background: #b8f397;
   color: #08090d !important;
-  box-shadow: 0 4px 18px rgba(0, 214, 104, 0.35);
+  box-shadow: 0 4px 18px rgba(132, 204, 22, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary::after {
@@ -493,7 +497,7 @@ html {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.45),
     transparent
   );
   transform: rotate(25deg);
@@ -502,11 +506,11 @@ html {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 8px 30px rgba(184, 243, 151, 0.55);
 }
 
 .ak-root[data-theme="light"] .btn-primary:hover {
-  box-shadow: 0 8px 30px rgba(0, 214, 104, 0.5);
+  box-shadow: 0 8px 30px rgba(132, 204, 22, 0.5);
 }
 
 .btn-secondary {
