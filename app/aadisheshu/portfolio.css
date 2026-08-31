@@ -1196,6 +1196,8 @@ html {
 }
 
 /* ── RESPONSIVE ──────────────────────────────────── */
+
+/* ── Tablet  ≤1024px ─────────────────────────────── */
 @media (max-width: 1024px) {
   .ak-hero-grid {
     grid-template-columns: 1fr;
@@ -1206,6 +1208,10 @@ html {
   }
   .ak-stat-item:nth-child(2) {
     border-right: none;
+  }
+  .ak-stat-item:nth-child(1),
+  .ak-stat-item:nth-child(2) {
+    border-bottom: 1px solid var(--border);
   }
   .ak-project-card {
     grid-template-columns: 60px 1fr;
@@ -1228,39 +1234,189 @@ html {
   }
   .ak-systems-grid {
     grid-template-columns: 1fr;
+    gap: 40px;
   }
   .ak-contact-card {
     grid-template-columns: 1fr;
     padding: 40px;
+    gap: 40px;
   }
 }
 
+/* ── Mobile  ≤640px ──────────────────────────────── */
 @media (max-width: 640px) {
+
+  /* -- Nav cleanup: remove clutter, keep brand | ☀ | ≡ -- */
   .ak-nav-inner {
     padding: 0 16px;
+    height: 60px;
   }
-  .ak-container {
-    padding: 0 16px;
+  .ak-nav-links { display: none; }        /* desktop links hidden */
+  .ak-cta-btn   { display: none; }        /* CTA moves to hero section */
+  .ak-nav-actions { gap: 8px; }
+  .ak-brand-role {
+    display: none;                         /* hide sub-role on small screens */
   }
-  .ak-nav-links {
-    display: none;
+  .ak-brand-name {
+    font-size: 14px;
+    white-space: nowrap;
   }
-  .ak-project-card {
-    grid-template-columns: 1fr;
-    padding: 24px;
+  .ak-theme-btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
   }
-  .ak-proj-num {
-    display: none;
+
+  /* -- Container / general -- */
+  .ak-container { padding: 0 16px; }
+  .ak-section   { padding: 56px 0; }
+  .ak-section-header { margin-bottom: 32px; }
+  .ak-section-tag { font-size: 10px; }
+  .ak-section-title {
+    font-size: clamp(24px, 6.5vw, 34px);
+    line-height: 1.2;
   }
-  .ak-stats-grid {
-    grid-template-columns: 1fr;
+  .ak-section-subtitle {
+    font-size: 14px;
+    margin-top: 10px;
   }
+
+  /* -- Hero -- */
+  .ak-hero { padding: 36px 0 56px; }
+  .ak-hero-badge {
+    font-size: 10.5px;
+    padding: 5px 12px;
+    margin-bottom: 18px;
+  }
+  .ak-hero-title {
+    font-size: clamp(28px, 7.5vw, 38px);
+    line-height: 1.14;
+    margin-bottom: 16px;
+  }
+  .ak-hero-tagline {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .ak-hero-btns { gap: 10px; }
+  .btn-primary, .btn-secondary {
+    padding: 11px 18px;
+    font-size: 13px;
+  }
+
+  /* -- Terminal widget -- */
+  .ak-term-header { padding: 8px 12px; gap: 8px; }
+  .ak-term-dot { width: 8px; height: 8px; }
+  .ak-term-tab { padding: 3px 7px; font-size: 9.5px; }
+  .ak-term-status { font-size: 9px; }
+  .ak-term-body {
+    padding: 14px 12px;
+    font-size: 11px;
+    min-height: 210px;
+  }
+  .term-container-row { font-size: 10.5px; padding-left: 8px; }
+  .ak-term-stat { padding: 10px 8px; text-align: center; }
+  .ak-term-stat-val { font-size: 15px; }
+  .ak-term-stat-lbl { font-size: 8px; }
+
+  /* -- Stats bar: 2×2 grid, not 1 column -- */
+  .ak-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .ak-stat-item {
+    padding: 22px 14px;
     border-right: none;
     border-bottom: 1px solid var(--border);
-    padding: 28px 20px;
   }
-  .ak-systems-card {
-    padding: 28px 20px;
+  .ak-stat-item:nth-child(odd)  { border-right: 1px solid var(--border); }
+  .ak-stat-item:nth-child(even) { border-right: none; }
+  .ak-stat-item:nth-child(3),
+  .ak-stat-item:nth-child(4)    { border-bottom: none; }
+  .ak-stat-num {
+    font-size: 30px;
+    margin-bottom: 4px;
+  }
+  .ak-stat-label { font-size: 11.5px; line-height: 1.35; }
+
+  /* -- Project cards -- */
+  .ak-projects-list { gap: 16px; }
+  .ak-project-card {
+    grid-template-columns: 1fr;
+    padding: 20px 16px;
+    gap: 14px;
+  }
+  .ak-proj-num { display: none; }
+  .ak-proj-eyebrow { font-size: 10px; }
+  .ak-proj-title { font-size: 19px; margin-bottom: 6px; }
+  .ak-proj-desc { font-size: 13px; margin-bottom: 12px; }
+  .ak-tag { font-size: 10px; padding: 3px 8px; }
+  .ak-proj-right {
+    grid-column: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+  .ak-proj-metric-val { font-size: 16px; }
+  .ak-proj-link-btn { width: 36px; height: 36px; }
+
+  /* -- Experience timeline -- */
+  .ak-exp-item { padding-left: 20px; padding-bottom: 28px; }
+  .ak-exp-node { left: -5px; width: 10px; height: 10px; }
+  .ak-exp-date { font-size: 10px; }
+  .ak-exp-role { font-size: 17px; }
+  .ak-exp-company { font-size: 12.5px; }
+  .ak-exp-body { font-size: 13px; line-height: 1.6; }
+
+  /* -- Systems / stack -- */
+  .ak-systems-card { padding: 22px 16px; }
+  .ak-sys-item { grid-template-columns: 26px 1fr; gap: 12px; }
+  .ak-sys-title { font-size: 16px; }
+  .ak-sys-desc { font-size: 12.5px; }
+  .ak-stack-box { padding: 18px 14px; }
+  .ak-stack-pill { font-size: 10px; padding: 4px 8px; }
+
+  /* -- Contact -- */
+  .ak-contact-card { padding: 26px 16px; gap: 24px; }
+  .ak-contact-title { font-size: clamp(22px, 6vw, 28px); }
+  .ak-contact-desc { font-size: 13px; }
+  .ak-email-copy-btn { padding: 12px 14px; font-size: 12px; }
+  .ak-social-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .ak-social-link {
+    padding: 9px 10px;
+    font-size: 11.5px;
+    justify-content: center;
+  }
+
+  /* -- Footer -- */
+  .ak-footer { padding: 24px 0; }
+  .ak-footer-inner {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    font-size: 11px;
   }
 }
+
+/* ── Very small  ≤400px ──────────────────────────── */
+@media (max-width: 400px) {
+  .ak-hero-btns {
+    flex-direction: column;
+  }
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  .ak-social-row { grid-template-columns: 1fr; }
+  .ak-email-copy-btn span {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+

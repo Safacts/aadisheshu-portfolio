@@ -90,7 +90,7 @@ const PROJECTS = [
 
 const EXPERIENCES = [
   {
-    date: "2024 — Present",
+    date: "Mar 2026 — Present",
     role: "Founding Engineer",
     company: "Rubix IT Solution Pvt. Ltd.",
     body: "First engineer. Architected and deployed the core Nova My Mentor platform (custom LLM inference pipeline, TTS microservice, student analytics), Acharya ERP (70+ REST endpoints, 1,700+ users), and Nidhi DBaaS. Maintain a production VPS fleet running 15+ containerized services.",
